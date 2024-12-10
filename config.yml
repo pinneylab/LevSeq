@@ -7,17 +7,18 @@ barcode_path: "" # path to fasta file containing baracode sequences
 # demultiplexing arguments
 front_window_size: 100
 rear_window_size: 100
-min_length: 200
-max_length: 10000
-match_score: 1
-mismatch_score: -1
+min_read_length: 200
+max_read_length: 10000
 alignment_score_threshold: 70
-edit_distance: 5 # determines whether or not an alignment between a read and barcode is counted 
+edit_distance_threshold: 5
 score_matrix: 1
 
 # variant calling arguments
 position_offset: 0
+calling_threshold: 0.5 # 
+n_threads: 10
 
 # misc arguments
 skip_demultiplexing: false
 skip_variantcalling: false
+show_msa: false # if true will include sequence alignment in interactive visual

@@ -58,6 +58,8 @@ void printHelp() {
               << "  --barcode_fasta, -b               Required, Path to barcode fasta file, string\n"
               << "  --front_window_size, -w           Required, integer\n"
               << "  --rear_window_size, -r            Required, integer\n"
+              << "  --alignment_score_threshold       Required, double\n"
+              << "  --edit_distance_threshold         Required, integer\n"
               << "  --min_length                    Optional, integer, default: 0\n"
               << "  --max_length                    Optional, integer, default: 10000\n"
               << "  --match_score                 Optional, integer, default: 1\n"
@@ -91,6 +93,8 @@ int main(int argc, char* argv[]) {
         {"-b", "--barcode_fasta"},
         {"-w", "--front_window_size"},
         {"-r", "--rear_window_size"},
+        {"-a", "--alignment_score_threshold"},
+        {"-e", "--edit_distance_threshold"},
         {"-m", "--min_length"},
         {"-x", "--max_length"},
         {"-s", "--match_score"},
@@ -117,7 +121,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    std::vector<std::string> requiredArgs = {"-f", "--folder_name", "-d", "--demultiplexer_folder_path", "-b", "--barcode_fasta", "-w", "--front_window_size", "-r", "--rear_window_size"};
+    std::vector<std::string> requiredArgs = {"-f", "--folder_name", "-d", "--demultiplexer_folder_path", "-b", "--barcode_fasta", "-w", "--front_window_size", "-r", "--rear_window_size", "-a", "--alignment_score_threshold", "-e", "--edit_distance_threshold"};
     std::vector<std::string> missingArgs = checkRequiredArgs(args, requiredArgs);
 
     if (!missingArgs.empty()) {
@@ -131,6 +135,9 @@ int main(int argc, char* argv[]) {
     std::string folderName = args["--folder_name"];
     std::string demultiplexerFolderPath = args["--demultiplexer_folder_path"];
     std::string barcodeFasta = args["--barcode_fasta"];
+    double alignment_score_threshold = std::stod(args["--alignment_score_threshold"]);
+    int edit_distance_threshold = std::stoi(args["--edit_distance_threshold"]);
+
     int frontWindowSize;
     int rearWindowSize;
     try {
@@ -144,8 +151,6 @@ int main(int argc, char* argv[]) {
     // Min and Max Length
     int min_length = 0;
     int max_length = 10000;
-
-    // Check if arguments are provided
     if (args.count("--min_length") > 0) {
         try {
             min_length = std::stoi(args["--min_length"]);
@@ -162,6 +167,7 @@ int main(int argc, char* argv[]) {
             return 1;
         }
     }
+
 
     // Check if max_length is smaller than min_length
     if (max_length < min_length) {
@@ -345,7 +351,7 @@ int main(int argc, char* argv[]) {
                     }
 
                     //int score = perform_alignment(sequence_to_align, ref_seq); // Get 
-                    score = perform_alignment_trim(sequence_to_align, ref_seq, scoring_matrix2, ref_seq_length); 
+                    score = perform_alignment_trim(sequence_to_align, ref_seq, scoring_matrix2, ref_seq_length, edit_distance_threshold); 
 
 
                     double percent_score = (double)score.score / rbc_sum_score * 100;
@@ -386,7 +392,7 @@ int main(int argc, char* argv[]) {
                     }
 
                 // Check if best score is above thershold%, otherwise assign as unclassified
-                if (best_rbc_percent_score < 70) {
+                if (best_rbc_percent_score < alignment_score_threshold) {
                     best_rbc_name = "unclassified";
                     }
 
@@ -416,7 +422,7 @@ int main(int argc, char* argv[]) {
                             }
                         }
 
-                        if (best_fbc_percent_score < 70) {
+                        if (best_fbc_percent_score < alignment_score_threshold) {
                             best_fbc_name = "unclassified";
                             }
                         

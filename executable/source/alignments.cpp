@@ -95,7 +95,7 @@ int perform_alignment(std::string const & seq1_str, std::string const & seq2_str
 
 
 
-localAlignmentResult perform_alignment_trim(std::string const & seq1_str, std::string const & seq2_str, const nucleotide_scoring_scheme<int>::matrix_type& scoring_matrix2, double barcode_length)
+localAlignmentResult perform_alignment_trim(std::string const & seq1_str, std::string const & seq2_str, const nucleotide_scoring_scheme<int>::matrix_type& scoring_matrix2, double barcode_length, int edit_distance_threshold)
 {   
     // std::cout << "Barcode length: " << barcode_length << std::endl;
     // std::cout << "Barcode sequence: " << seq2_str << std::endl;
@@ -130,7 +130,7 @@ localAlignmentResult perform_alignment_trim(std::string const & seq1_str, std::s
         {
             // Get edit distance
             double edit_distance = std::abs(static_cast<double>(res.sequence1_end_position() - res.sequence1_begin_position()) - barcode_length);
-            if (edit_distance < 5){
+            if (edit_distance < edit_distance_threshold){
                 score = res.score();
                 start_pos = res.sequence1_begin_position();
                 end_pos = res.sequence1_end_position();

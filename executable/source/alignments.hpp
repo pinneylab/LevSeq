@@ -48,7 +48,7 @@ struct localAlignmentResult
 
 int perform_alignment(const std::string& seq1, const std::string& seq2);
 
-localAlignmentResult perform_alignment_trim(std::string const & seq1_str, std::string const & seq2_str, const nucleotide_scoring_scheme<int>::matrix_type& scoring_matrix2, double barcode_length);
+localAlignmentResult perform_alignment_trim(std::string const & seq1_str, std::string const & seq2_str, const nucleotide_scoring_scheme<int>::matrix_type& scoring_matrix2, double barcode_length, int edit_distance_threshold);
 
 
 std::vector<sequence_pair_t> build_sequence_pairs(seqan3::dna15_vector const& common_seq, std::map<std::string, std::string> const& barcodes);

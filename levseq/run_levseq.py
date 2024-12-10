@@ -199,7 +199,18 @@ def filter_barcodes(input_fasta, output_fasta, barcode_range, rbc, front_prefix,
         SeqIO.write(filtered_records, output_handle, "fasta")
 
 # Demultiplex fastq reads
-def demux_fastq(file_to_fastq, result_folder, barcode_path):
+def demux_fastq(
+        file_to_fastq, 
+        result_folder, 
+        barcode_path, 
+        front_window_size, 
+        rear_window_size, 
+        min_read_length, 
+        max_read_length,
+        alignment_score_threshold,
+        edit_distance_threshold
+        ):
+    
     system_architecture = platform.machine().lower()
     if system_architecture == 'arm64':
         executable_name = "demultiplex-arm64"
@@ -217,9 +228,20 @@ def demux_fastq(file_to_fastq, result_folder, barcode_path):
         executable_path = package_root / "levseq" / "barcoding" / executable_name
     if not executable_path.exists():
         raise FileNotFoundError(f"Executable not found: {executable_path}")
-    seq_min = 200 
-    seq_max = 10000
-    prompt = f"{executable_path} -f {file_to_fastq} -d {result_folder} -b {barcode_path} -w 100 -r 100 -m {seq_min} -x {seq_max}"
+    
+    prompt = ' '.join([
+        executable_path,
+        '-f {}'.format(file_to_fastq),
+        '-d {}'.format(result_folder),
+        '-b {}'.format(barcode_path),
+        '-w {}'.format(front_window_size),
+        '-r {}'.format(rear_window_size),
+        '-a {}'.format(alignment_score_threshold),
+        '-e {}'.format(edit_distance_threshold),
+        '-m {}'.format(min_read_length),
+        '-x {}'.format(max_read_length),
+    ])
+
     subprocess.run(prompt, shell=True, check=True)
 
 # Variant calling using VariantCaller class
@@ -461,7 +483,18 @@ def process_ref_csv(cl_args, tqdm_fn=tqdm.tqdm):
         if not cl_args["skip_demultiplexing"]:
             file_to_fastq = cat_fastq_files(cl_args.get("path"), output_dir)
             try:
-                demux_fastq(output_dir, name_folder, barcode_path)
+                demux_fastq(
+                    output_dir, 
+                    name_folder, 
+                    barcode_path, 
+                    cl_args['front_window_size'], 
+                    cl_args['rear_window_size'],
+                    cl_args['min_read_length'],
+                    cl_args['max_read_length'],
+                    cl_args['alignment_score_threshold'], # need to add a check to make sure the threshold is between 0 and 100
+                    cl_args['edit_distance_threshold']
+                    )
+                
             except Exception as e:
                 logging.error("An error occurred during demultiplexing for sample {}. Skipping this sample.".format(name), exc_info=True)
                 continue
