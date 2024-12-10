@@ -165,16 +165,10 @@ def barcode_user(cl_args, i):
 
 def filter_bc(cl_args: dict, name_folder: Path, i: int) -> Path:
     front_min, front_max, rbc = barcode_user(cl_args, i)
-    try:
-        with resources.path('levseq.barcoding', 'minion_barcodes.fasta') as barcode_path:
-            barcode_path = Path(barcode_path)
-    except ImportError:
-        package_root = Path(__file__).resolve().parent.parent
-        barcode_path = package_root / "levseq" / "barcoding" / "minion_barcodes.fasta"
-    if not barcode_path.exists():
-        raise FileNotFoundError(f"Barcode file not found: {barcode_path}")
+    
     front_prefix = "NB"
     back_prefix = "RB"
+    barcode_path = cl_args['barcode_path']
     barcode_path_filter = os.path.join(name_folder, "levseq_barcodes_filtered.fasta")
     filter_barcodes(
         str(barcode_path),
@@ -190,6 +184,8 @@ def filter_bc(cl_args: dict, name_folder: Path, i: int) -> Path:
 def filter_barcodes(input_fasta, output_fasta, barcode_range, rbc, front_prefix, back_prefix):
     front_min, front_max = barcode_range
     filtered_records = []
+
+    # TODO: some checks to make sure barcode file is formatted properly
     for record in SeqIO.parse(input_fasta, "fasta"):
         if (
             record.id.startswith(front_prefix)

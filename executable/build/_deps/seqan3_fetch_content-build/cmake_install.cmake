@@ -1,4 +1,4 @@
-# Install script for directory: /Users/JLoong8/git/MinION/source/build/_deps/seqan3_fetch_content-src
+# Install script for directory: /wynton/home/kortemme/jzhang1198/code/LevSeq/executable/build/_deps/seqan3_fetch_content-src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -27,6 +27,11 @@ if(NOT CMAKE_INSTALL_COMPONENT)
   endif()
 endif()
 
+# Install shared libraries without execute permission?
+if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
+  set(CMAKE_INSTALL_SO_NO_EXE "0")
+endif()
+
 # Is this installation the result of a crosscompile?
 if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
@@ -39,30 +44,30 @@ endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/doc/seqan3" TYPE FILE FILES
-    "/Users/JLoong8/git/MinION/source/build/_deps/seqan3_fetch_content-src/CHANGELOG.md"
-    "/Users/JLoong8/git/MinION/source/build/_deps/seqan3_fetch_content-src/CODE_OF_CONDUCT.md"
-    "/Users/JLoong8/git/MinION/source/build/_deps/seqan3_fetch_content-src/CONTRIBUTING.md"
-    "/Users/JLoong8/git/MinION/source/build/_deps/seqan3_fetch_content-src/LICENSE.md"
-    "/Users/JLoong8/git/MinION/source/build/_deps/seqan3_fetch_content-src/README.md"
+    "/wynton/home/kortemme/jzhang1198/code/LevSeq/executable/build/_deps/seqan3_fetch_content-src/CHANGELOG.md"
+    "/wynton/home/kortemme/jzhang1198/code/LevSeq/executable/build/_deps/seqan3_fetch_content-src/CODE_OF_CONDUCT.md"
+    "/wynton/home/kortemme/jzhang1198/code/LevSeq/executable/build/_deps/seqan3_fetch_content-src/CONTRIBUTING.md"
+    "/wynton/home/kortemme/jzhang1198/code/LevSeq/executable/build/_deps/seqan3_fetch_content-src/LICENSE.md"
+    "/wynton/home/kortemme/jzhang1198/code/LevSeq/executable/build/_deps/seqan3_fetch_content-src/README.md"
     )
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/seqan3" TYPE FILE FILES
-    "/Users/JLoong8/git/MinION/source/build/_deps/seqan3_fetch_content-src/build_system/seqan3-config.cmake"
-    "/Users/JLoong8/git/MinION/source/build/_deps/seqan3_fetch_content-src/build_system/seqan3-config-version.cmake"
+    "/wynton/home/kortemme/jzhang1198/code/LevSeq/executable/build/_deps/seqan3_fetch_content-src/build_system/seqan3-config.cmake"
+    "/wynton/home/kortemme/jzhang1198/code/LevSeq/executable/build/_deps/seqan3_fetch_content-src/build_system/seqan3-config-version.cmake"
     )
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/Users/JLoong8/git/MinION/source/build/_deps/seqan3_fetch_content-src/include/seqan3")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/wynton/home/kortemme/jzhang1198/code/LevSeq/executable/build/_deps/seqan3_fetch_content-src/include/seqan3")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/seqan3/submodules/sdsl-lite" TYPE DIRECTORY FILES "/Users/JLoong8/git/MinION/source/build/_deps/seqan3_fetch_content-src/submodules/sdsl-lite/include")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/seqan3/submodules/sdsl-lite" TYPE DIRECTORY FILES "/wynton/home/kortemme/jzhang1198/code/LevSeq/executable/build/_deps/seqan3_fetch_content-src/submodules/sdsl-lite/include")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/seqan3/submodules/cereal" TYPE DIRECTORY FILES "/Users/JLoong8/git/MinION/source/build/_deps/seqan3_fetch_content-src/submodules/cereal/include")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/seqan3/submodules/cereal" TYPE DIRECTORY FILES "/wynton/home/kortemme/jzhang1198/code/LevSeq/executable/build/_deps/seqan3_fetch_content-src/submodules/cereal/include")
 endif()
 

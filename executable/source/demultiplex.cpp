@@ -333,6 +333,9 @@ int main(int argc, char* argv[]) {
                 for(const auto& [ref_name, ref_seq] : all_rbc) {
                     
                     double rbc_sum_score = rbc_precalculated_scores[ref_name];
+                    double ref_seq_length = static_cast<double>(ref_seq.length());
+                    // std::cout << "Ref seq length: " << ref_seq_length << std::endl;
+
 
                     std::string sequence_to_align;
                     if(ref_name.find("-Rev") != std::string::npos) {
@@ -342,7 +345,7 @@ int main(int argc, char* argv[]) {
                     }
 
                     //int score = perform_alignment(sequence_to_align, ref_seq); // Get 
-                    score = perform_alignment_trim(sequence_to_align, ref_seq, scoring_matrix2); 
+                    score = perform_alignment_trim(sequence_to_align, ref_seq, scoring_matrix2, ref_seq_length); 
 
 
                     double percent_score = (double)score.score / rbc_sum_score * 100;
@@ -391,9 +394,11 @@ int main(int argc, char* argv[]) {
                     // Forward Barcode Demultiplexing
                     for (const auto& [fbc_ref_name, fbc_ref_seq] : fbc_map) {
                         double fbc_sum_score = fbc_precalculated_scores[fbc_ref_name];
-                        
+                        double fbc_ref_seq_length = static_cast<double>(fbc_ref_seq.length());
+
                         //int fbc_score = perform_alignment(forward_subseq, fbc_ref_seq);
-                        fbc_score = perform_alignment_trim(forward_subseq, fbc_ref_seq, scoring_matrix2);
+                        fbc_score = perform_alignment_trim(forward_subseq, fbc_ref_seq, scoring_matrix2, fbc_ref_seq_length);
+                        // std::cout << "FBC Ref seq length: " << fbc_ref_seq_length << std::endl;
 
 
                         double fbc_percent_score = (double)fbc_score.score / fbc_sum_score * 100;
@@ -479,4 +484,3 @@ int main(int argc, char* argv[]) {
     std::cout << "\n";
     return 0;
 }
-

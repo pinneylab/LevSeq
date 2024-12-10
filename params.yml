@@ -1,0 +1,19 @@
+# required arguments
+fasta_dir: "" # path to directory containing nanoPore reads in fastq format
+summary_csv: "" # path to csv file containing plate information
+working_dir: "" # path to directory to save intermediary files
+barcode_path: "" # path to fasta file containing baracode sequences
+
+# demultiplexing arguments
+front_window_size: 100
+rear_window_size: 100
+min_length: 200
+max_length: 10000
+match_score: 1
+mismatch_score: -1
+alignment_score_threshold: 70
+edit_distance: 5 # determines whether or not an alignment between a read and barcode is counted 
+score_matrix: 1
+
+# variant calling arguments
+position_offset: 0

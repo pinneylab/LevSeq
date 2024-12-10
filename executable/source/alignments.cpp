@@ -95,8 +95,10 @@ int perform_alignment(std::string const & seq1_str, std::string const & seq2_str
 
 
 
-localAlignmentResult perform_alignment_trim(std::string const & seq1_str, std::string const & seq2_str, const nucleotide_scoring_scheme<int>::matrix_type& scoring_matrix2)
+localAlignmentResult perform_alignment_trim(std::string const & seq1_str, std::string const & seq2_str, const nucleotide_scoring_scheme<int>::matrix_type& scoring_matrix2, double barcode_length)
 {   
+    // std::cout << "Barcode length: " << barcode_length << std::endl;
+    // std::cout << "Barcode sequence: " << seq2_str << std::endl;
 
     auto seq1 = seq1_str | std::views::transform([](char c) { return seqan3::dna15{}.assign_char(c); });
     auto seq2 = seq2_str | std::views::transform([](char c) { return seqan3::dna15{}.assign_char(c); });
@@ -120,14 +122,14 @@ localAlignmentResult perform_alignment_trim(std::string const & seq1_str, std::s
     int score = 0;
     int start_pos = 0;
     int end_pos = 0;
-    const double BARCODE_LENGTH = 24.0;
+    // const double BARCODE_LENGTH = 41.0;
 
     try
     {
         for (auto res : seqan3::align_pairwise(std::tie(seq1, seq2), min_cfg))
         {
             // Get edit distance
-            double edit_distance = std::abs(static_cast<double>(res.sequence1_end_position() - res.sequence1_begin_position()) - BARCODE_LENGTH);
+            double edit_distance = std::abs(static_cast<double>(res.sequence1_end_position() - res.sequence1_begin_position()) - barcode_length);
             if (edit_distance < 5){
                 score = res.score();
                 start_pos = res.sequence1_begin_position();

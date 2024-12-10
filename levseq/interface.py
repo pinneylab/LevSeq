@@ -48,6 +48,8 @@ def build_cli_parser():
             help="Path to folder containing fastq.pass or pod5_pass files.")
     required_args_group.add_argument("summary",
             help="CSV file containig barcodes used, name of each plate and reference sequence in string")
+    required_args_group.add_argument('barcode_path', 
+            help='Path to fasta file containing barcode sequences. Headers for forward and reverse barcodes should be formatted as "NBXX" or "RBXX", respectively, where "XX" is between 01 and 96.')
     # Add optional arguments
     optional_args_group = parser.add_argument_group("Optional Arguments", "Aditional arguments")
     optional_args_group.add_argument("--output",

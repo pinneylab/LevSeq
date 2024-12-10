@@ -21,6 +21,10 @@ FetchContent_MakeAvailable (seqan3_fetch_content)
 
 list(APPEND CMAKE_PREFIX_PATH "/bin")
 
+# Include Conda environment paths
+include_directories(/wynton/home/kortemme/jzhang1198/miniconda3/envs/levseq/include)
+link_directories(/wynton/home/kortemme/jzhang1198/miniconda3/envs/levseq/lib)
+
 # add_executable(seq_io seq_io.cpp)
 # target_link_libraries(seq_io PUBLIC seqan3::seqan3)
 
@@ -31,7 +35,7 @@ list(APPEND CMAKE_PREFIX_PATH "/bin")
 # target_link_libraries(test_main PUBLIC seqan3::seqan3)
 
 add_executable(demultiplex io.cpp alignments.cpp demultiplex.cpp)
-target_link_libraries(demultiplex PUBLIC seqan3::seqan3)
+target_link_libraries(demultiplex PUBLIC z seqan3::seqan3)
 
 
 
