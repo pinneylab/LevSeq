@@ -4,6 +4,8 @@ sandbox/*
 sandbox_old/
 sandbox_old/*
 
+executable/build/
+
 tests/seqfit/*.csv
 
 *.xlsx
