@@ -138,6 +138,10 @@ int main(int argc, char* argv[]) {
     double alignment_score_threshold = std::stod(args["--alignment_score_threshold"]);
     int edit_distance_threshold = std::stoi(args["--edit_distance_threshold"]);
 
+    std::cout << "Alignment score threshold: " << alignment_score_threshold << std::endl;
+    std::cout << "Edit distance threshold: " << edit_distance_threshold << std::endl;
+
+
     int frontWindowSize;
     int rearWindowSize;
     try {
@@ -403,7 +407,7 @@ int main(int argc, char* argv[]) {
                         double fbc_ref_seq_length = static_cast<double>(fbc_ref_seq.length());
 
                         //int fbc_score = perform_alignment(forward_subseq, fbc_ref_seq);
-                        fbc_score = perform_alignment_trim(forward_subseq, fbc_ref_seq, scoring_matrix2, fbc_ref_seq_length);
+                        fbc_score = perform_alignment_trim(forward_subseq, fbc_ref_seq, scoring_matrix2, fbc_ref_seq_length, edit_distance_threshold);
                         // std::cout << "FBC Ref seq length: " << fbc_ref_seq_length << std::endl;
 
 

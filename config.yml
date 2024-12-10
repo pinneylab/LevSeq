@@ -1,8 +1,9 @@
 # required arguments
-fasta_dir: "" # path to directory containing nanoPore reads in fastq format
-summary_csv: "" # path to csv file containing plate information
-working_dir: "" # path to directory to save intermediary files
-barcode_path: "" # path to fasta file containing baracode sequences
+name: "levseq_results"
+fasta_dir: "/wynton/home/kortemme/jzhang1198/projects/gsp1/notebooks/2024/11/20241119_sequencing_pipeline_pilot/_data/sequencing/" # path to directory containing nanoPore reads in fastq format
+summary_csv: "/wynton/home/kortemme/jzhang1198/projects/gsp1/notebooks/2024/11/20241119_sequencing_pipeline_pilot/_data/sequencing/summary.csv" # path to csv file containing plate information
+working_dir: "." # path to directory to save intermediary files
+barcode_path: "/wynton/home/kortemme/jzhang1198/projects/gsp1/notebooks/2024/11/20241119_sequencing_pipeline_pilot/_data/barcodes.fasta" # path to fasta file containing baracode sequences
 
 # demultiplexing arguments
 front_window_size: 100
