@@ -17,3 +17,7 @@ score_matrix: 1
 
 # variant calling arguments
 position_offset: 0
+
+# misc arguments
+skip_demultiplexing: false
+skip_variantcalling: false
