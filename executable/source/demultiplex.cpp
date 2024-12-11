@@ -478,7 +478,7 @@ int main(int argc, char* argv[]) {
             }
 
         ++processed_files;
-        std::cout << "\rProcessing files: [";
+        std::cout << "\rDemultiplexing reads: [";
         int progress = (processed_files * 50 / n_files);
         for (int i = 0; i < 50; ++i) {
             if (i < progress) {
