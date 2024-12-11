@@ -157,7 +157,7 @@ class VariantCaller:
     def _run_variant_thread(self, args):
         barcode_ids, threshold, min_depth, output_dir = args
         # Overall progress bar for all barcodes in this thread
-        with tqdm(barcode_ids, desc="Processing barcodes", leave=False) as pbar:
+        with tqdm(barcode_ids, desc="Calling variants", leave=False) as pbar:
             for barcode_id in pbar:
                 try:
                     row = self.variant_dict.get(barcode_id)

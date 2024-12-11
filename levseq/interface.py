@@ -38,7 +38,7 @@ def build_cli_parser():
     return parser
 
 
-def check_config():
+def check_config(config):
 
     assert config['front_window_size'] > 0 and isinstance(config['front_window_size'], int), 'front_window_size must be an integer greater than 0.'
     assert config['rear_window_size'] > 0 and isinstance(config['rear_window_size'], int), 'rear_window_size must be an integer greater than 0.'
@@ -72,7 +72,6 @@ def execute_LevSeq():
     # Set up progres bar
     tqdm_fn = tqdm.tqdm
 
-    print(config, type(config))
     # Run LevSeq
     try:
         run_LevSeq(config, tqdm_fn)

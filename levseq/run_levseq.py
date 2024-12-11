@@ -230,10 +230,10 @@ def demux_fastq(
         raise FileNotFoundError(f"Executable not found: {executable_path}")
     
     prompt = ' '.join([
-        executable_path,
-        '-f {}'.format(file_to_fastq),
-        '-d {}'.format(result_folder),
-        '-b {}'.format(barcode_path),
+        str(executable_path),
+        '-f {}'.format(str(file_to_fastq)),
+        '-d {}'.format(str(result_folder)),
+        '-b {}'.format(str(barcode_path)),
         '-w {}'.format(front_window_size),
         '-r {}'.format(rear_window_size),
         '-a {}'.format(alignment_score_threshold),
@@ -245,7 +245,7 @@ def demux_fastq(
     subprocess.run(prompt, shell=True, check=True)
 
 # Variant calling using VariantCaller class
-def call_variant(experiment_name, experiment_folder, template_fasta, filtered_barcodes):
+def call_variant(experiment_name, experiment_folder, template_fasta, filtered_barcodes, calling_threshold):
     try:
         vc = VariantCaller(
             experiment_name,
@@ -255,7 +255,7 @@ def call_variant(experiment_name, experiment_folder, template_fasta, filtered_ba
             padding_start=0,
             padding_end=0,
         )
-        variant_df = vc.get_variant_df(threshold=0.5, min_depth=5)
+        variant_df = vc.get_variant_df(threshold=calling_threshold, min_depth=5)
         logging.info("Variant calling to create consensus reads successful")
         return variant_df
     except Exception as e:
@@ -455,7 +455,6 @@ def save_csv(df, outputdir, name):
 
 # Function to process the reference CSV and generate variants
 def process_ref_csv(cl_args, tqdm_fn=tqdm.tqdm):
-    print(cl_args)
     ref_df = pd.read_csv(cl_args["summary_csv"])
     result_folder = create_result_folder(cl_args)
     variant_csv_path = os.path.join(result_folder, "variants.csv")
@@ -483,39 +482,39 @@ def process_ref_csv(cl_args, tqdm_fn=tqdm.tqdm):
 
         if not cl_args["skip_demultiplexing"]:
             file_to_fastq = cat_fastq_files(cl_args.get("fasta_dir"), output_dir)
-        #     try:
-        #         demux_fastq(
-        #             output_dir, 
-        #             name_folder, 
-        #             barcode_path, 
-        #             cl_args['front_window_size'], 
-        #             cl_args['rear_window_size'],
-        #             cl_args['min_read_length'],
-        #             cl_args['max_read_length'],
-        #             cl_args['alignment_score_threshold'], # need to add a check to make sure the threshold is between 0 and 100
-        #             cl_args['edit_distance_threshold']
-        #             )
+            try:
+                demux_fastq(
+                    output_dir, 
+                    name_folder, 
+                    barcode_path, 
+                    cl_args['front_window_size'], 
+                    cl_args['rear_window_size'],
+                    cl_args['min_read_length'],
+                    cl_args['max_read_length'],
+                    cl_args['alignment_score_threshold'], # need to add a check to make sure the threshold is between 0 and 100
+                    cl_args['edit_distance_threshold']
+                    )
                 
-    #         except Exception as e:
-    #             logging.error("An error occurred during demultiplexing for sample {}. Skipping this sample.".format(name), exc_info=True)
-    #             continue
+            except Exception as e:
+                logging.error("An error occurred during demultiplexing for sample {}. Skipping this sample.".format(name), exc_info=True)
+                continue
         
-    #     if not cl_args["skip_variantcalling"]:
-    #         try:
-    #             variant_result = call_variant(
-    #                 f"{name}", name_folder, temp_fasta_path, barcode_path
-    #             )
-    #             variant_result["barcode_plate"] = barcode_plate
-    #             variant_result["name"] = name
-    #             variant_result["refseq"] = refseq
+        if not cl_args["skip_variantcalling"]:
+            try:
+                variant_result = call_variant(
+                    f"{name}", name_folder, temp_fasta_path, barcode_path, cl_args['calling_threshold']
+                )
+                variant_result["barcode_plate"] = barcode_plate
+                variant_result["name"] = name
+                variant_result["refseq"] = refseq
 
-    #             variant_df = pd.concat([variant_df, variant_result])
-    #         except Exception as e:
-    #             logging.error("An error occurred during variant calling for sample {}. Skipping this sample.".format(name), exc_info=True)
-    #             continue
+                variant_df = pd.concat([variant_df, variant_result])
+            except Exception as e:
+                logging.error("An error occurred during variant calling for sample {}. Skipping this sample.".format(name), exc_info=True)
+                continue
     
-    # variant_df.to_csv(variant_csv_path, index=False)
-    # return variant_df
+    variant_df.to_csv(variant_csv_path, index=False)
+    return variant_df
 
 # Main function to run LevSeq and ensure saving of intermediate results if an error occurs
 def run_LevSeq(cl_args, tqdm_fn=tqdm.tqdm):
@@ -534,43 +533,44 @@ def run_LevSeq(cl_args, tqdm_fn=tqdm.tqdm):
         logging.error("An error occurred during processing summary file. Partial results saved at {}".format(variant_csv_path), exc_info=True)
         raise
     
-    # try:
-    #     variant_csv_path = os.path.join(result_folder, "variants.csv")
-    #     if os.path.exists(variant_csv_path):
-    #         variant_df = pd.read_csv(variant_csv_path)
+    try:
+        variant_csv_path = os.path.join(result_folder, "variants.csv")
+        if os.path.exists(variant_csv_path):
+            variant_df = pd.read_csv(variant_csv_path)
         
-    #     if variant_df.empty:
-    #         raise ValueError("The variant DataFrame is empty after processing. Unable to continue.")
+        if variant_df.empty:
+            raise ValueError("The variant DataFrame is empty after processing. Unable to continue.")
         
-    #     df_variants, df_vis = create_df_v(variant_df)
-    #     processed_csv = os.path.join(result_folder, "visualization_partial.csv")
-    #     df_vis.to_csv(processed_csv, index=False)
-    # except Exception as e:
-    #     processed_csv = os.path.join(result_folder, "visualization_partial.csv")
-    #     if 'df_vis' in locals():
-    #         df_vis.to_csv(processed_csv, index=False)
-    #     logging.error("An error occurred while preparing data for visualization. Partial visualization saved at {}".format(processed_csv), exc_info=True)
-    #     raise
+        df_variants, df_vis = create_df_v(variant_df)
+        processed_csv = os.path.join(result_folder, "visualization_partial.csv")
+        df_vis.to_csv(processed_csv, index=False)
+    except Exception as e:
+        processed_csv = os.path.join(result_folder, "visualization_partial.csv")
+        if 'df_vis' in locals():
+            df_vis.to_csv(processed_csv, index=False)
+        logging.error("An error occurred while preparing data for visualization. Partial visualization saved at {}".format(processed_csv), exc_info=True)
+        raise
     
-    # try:
-    #     layout = generate_platemaps(
-    #         max_combo_data=df_vis,
-    #         result_folder=result_folder,
-    #         show_msa=cl_args["show_msa"],
-    #     )
-    #     save_platemap_to_file(
-    #         heatmaps=layout,
-    #         outputdir=result_folder,
-    #         name=cl_args["name"],
-    #         show_msa=cl_args["show_msa"],
-    #     )
-    #     save_csv(df_variants, result_folder, cl_args["name"])
-    #     logging.info("Run successful, see visualization and results")
-    # except Exception as e:
-    #     partial_csv_path = os.path.join(result_folder, "variants_partial.csv")
-    #     df_variants.to_csv(partial_csv_path, index=False)
-    #     logging.error("An error occurred during visualization. Partial CSV saved at {}".format(partial_csv_path), exc_info=True)
-    #     raise
+    try:
+        layout = generate_platemaps(
+            max_combo_data=df_vis,
+            result_folder=result_folder,
+            show_msa=cl_args["show_msa"],
+            offset=cl_args['position_offset']
+        )
+        save_platemap_to_file(
+            heatmaps=layout,
+            outputdir=result_folder,
+            name=cl_args["name"],
+            show_msa=cl_args["show_msa"],
+        )
+        save_csv(df_variants, result_folder, cl_args["name"])
+        logging.info("Run successful, see visualization and results")
+    except Exception as e:
+        partial_csv_path = os.path.join(result_folder, "variants_partial.csv")
+        df_variants.to_csv(partial_csv_path, index=False)
+        logging.error("An error occurred during visualization. Partial CSV saved at {}".format(partial_csv_path), exc_info=True)
+        raise
 
 # This modification saves the results at each critical stage, ensuring that even in the case of failure,
 # the user has access to intermediate results and does not lose all the progress.

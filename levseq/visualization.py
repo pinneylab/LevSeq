@@ -323,7 +323,6 @@ def _make_platemap(df, title, cmap=None):
     )
 
 
-
 # Main function to return heatmap with or without alignment
 def generate_platemaps(
     max_combo_data,
@@ -331,6 +330,7 @@ def generate_platemaps(
     cmap=None,
     show_msa=False,
     widget_location="top_left",
+    offset: int = 0
 ):
     """Saves a plate heatmap html generated from from evSeq data.
 
@@ -365,6 +365,25 @@ def generate_platemaps(
         max_combo_df = pd.read_csv(max_combo_data)
     else:
         max_combo_df = max_combo_data.copy()
+
+    # update sequence numbering
+    if offset != 0:
+        variants_updated = []
+        for variant in max_combo_df['amino-acid_substitutions'].to_list():
+            variant_updated = []
+
+            for substitution in variant.split('_'):
+                position = substitution[1:-1]
+
+                if position.isdigit():
+                    substitution = '{}{}{}'.format(substitution[0], int(position) + offset, substitution[-1])
+
+                variant_updated.append(substitution)
+
+            variants_updated.append('_'.join(variant_updated))
+
+        max_combo_df['amino-acid_substitutions'] = variants_updated
+        
 
     # Identify unique plates
     unique_plates = max_combo_df.Plate.unique()
