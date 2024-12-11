@@ -1,9 +1,9 @@
 # required arguments
 name: "levseq_results"
-fasta_dir: "/wynton/home/kortemme/jzhang1198/projects/gsp1/notebooks/2024/11/20241119_sequencing_pipeline_pilot/_data/sequencing/" # path to directory containing nanoPore reads in fastq format
-summary_csv: "/wynton/home/kortemme/jzhang1198/projects/gsp1/notebooks/2024/11/20241119_sequencing_pipeline_pilot/_data/sequencing/summary.csv" # path to csv file containing plate information
+fasta_dir: "" # path to directory containing nanoPore reads in fastq format
+summary_csv: "" # path to csv file containing plate information
 working_dir: "." # path to directory to save intermediary files
-barcode_path: "/wynton/home/kortemme/jzhang1198/projects/gsp1/notebooks/2024/11/20241119_sequencing_pipeline_pilot/_data/barcodes.fasta" # path to fasta file containing baracode sequences
+barcode_path: "" # path to fasta file containing baracode sequences
 
 # demultiplexing arguments
 front_window_size: 100
@@ -12,14 +12,13 @@ min_read_length: 200
 max_read_length: 10000
 alignment_score_threshold: 70
 edit_distance_threshold: 5
-score_matrix: 1
 
 # variant calling arguments
 position_offset: 0
-calling_threshold: 0.5 # 
+calling_threshold: 0.5
 n_threads: 10
 
 # misc arguments
 skip_demultiplexing: false
 skip_variantcalling: false
-show_msa: false # if true will include sequence alignment in interactive visual
+show_msa: false
