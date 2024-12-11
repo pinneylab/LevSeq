@@ -89,9 +89,9 @@ def execute_LevSeq():
     # Set up progres bar
     tqdm_fn = tqdm.tqdm
 
-    # # Run LevSeq
-    # try:
-    #     run_LevSeq(config, tqdm_fn)
-    # except Exception as e:
-    #     print(e)
-    # print("Run Complete, add log info")
+    # Run LevSeq
+    try:
+        run_LevSeq(config, tqdm_fn)
+    except Exception as e:
+        print(e)
+    print("Run Complete, add log info")
