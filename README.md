@@ -53,18 +53,40 @@ or for mac users you can use: `brew install samtools`
 ```
 conda install -c bioconda -c conda-forge minimap2
 ```
+
 ### Docker Installation (Recommended for full pipeline)  
 For installing the whole pipeline, you'll need to use the docker image. For this, install docker as required for your 
 operating system (https://docs.docker.com/engine/install/).
 
 ### Usage
+`levseq` arguments are passed using a configuration file. A template is provided in `config.yml`. 
 
-#### Run via pip
+Required arguments:
+- `name`: a descriptive name for the run
+- `fasta_dir`: path to directory containing nanoPore reads in fastq format
+- `summary_csv`: path to csv file containing plate information
+- `working_dir`: path to directory where output files should be dumped
+- `barcode_path`: path to fasta file containing barcode sequences
+
+Demultiplexing arguments:
+- `front_window_size`: specifies the length of the 5` window on reads to which the forward barcode is aligned to.
+- `rear_window_size`: same as above, but for the 3` window and reverse barcode.
+- `min_read_length`: toss out reads under this threshold
+- `max_read_length`: toss out reads above this threshold
+- `alignment_score_threshold`: ignore alignments between barcode and reads with a score below this threshold
+- `edit_distance_threshold`: ignore alignments between barcode and reads that are greater than this threshold
+
+Variant calling arguments:
+- `position_offset`: useful if you want to update the indexing of your amino acid sequence
+- `calling_threshold`: treat reads containing the same barcodes as WT if the percentage of reads containing a specific mutation is less than this threshold
+- `n_threads`: number of threads to use during variant calling
+
+#### Run locally
 ```
-levseq <name of the run you can make this whatever> <location to data folder> <location of reference csv file>
+levseq /path/to/config.yml
 ```
 
-#### Run via docker
+#### Run with docker
 If using linux system
 ```
 docker pull yueminglong/levseq:levseq-1.2.5-x86
@@ -96,31 +118,6 @@ Important Notes:
 If the current directory is mounted to the container (via -v "$(pwd):/levseq\_results"), the basecalled result in FASTQ format and the ref.csv file must be located in the current directory.
 
 If these files are not present in the current directory, they will not be processed by the tool.
-
-Output:
-
-The results of the analysis will be saved to your current working directory.
-
-See the [manuscrtipt notebook](https://github.com/fhalab/LevSeq/blob/main/manuscript/notebooks/epPCR_10plates.ipynb) for an example.
-*Note: if using docker, the html and csv final output will be saved in the directory that you are running from instead of in the Platemaps or Results subfolder.
-
-#### Required Arguments
-1. Name of the experiment, this will be the name of the output folder
-2. Location of basecalled fastq files, this is the direct output from using the MinKnow software for sequencing
-3. Location of reference csv file, this file includes information of barcodes used for each plate and the DNA sequence used for reference for each plate
-
-#### Optional Arguments
---skip\_demultiplexing If enabled, demultiplexing step will be skipped 
-
---skip\_variantcalling If enabled, variant valling step will be skipped 
-
---output Save location for output, if not provided default to where the program is executed
-
---show\_msa Showing multiple sequence alignment for each well
-
-Great you should be all done!
-
-For more details or trouble shooting please look at our [computational_protocols](https://github.com/fhalab/LevSeq/wiki/Computational-protocols).
 
 #### Citing
 
