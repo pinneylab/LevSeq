@@ -38,7 +38,24 @@ def build_cli_parser():
     return parser
 
 
+def check_barcode_fasta(fasta_file: str):
+    import numpy as np
+    from Bio import SeqIO 
+
+    records = list(SeqIO.parse(fasta_file, 'fasta'))
+
+    assert len(records) == 96 * 2
+    barcode_types, barcode_numbers = zip(*[(r.id[0:2], r.id[2:]) for r in records])
+    barcode_types, barcode_numbers = np.array(barcode_types), np.array(barcode_numbers)
+
+    assert set(barcode_types) == set(['NB', 'RB']), 'Barcode identifiers must begin with either "RB" or "NB" for reverse and forward barcodes, respectively.'
+    assert set(barcode_numbers[barcode_types == 'RB']) == set([str(i).zfill(2) for i in range(1, 97)])
+    assert set(barcode_numbers[barcode_types == 'NB']) == set([str(i).zfill(2) for i in range(1, 97)])
+
+
 def check_config(config):
+
+    check_barcode_fasta(config['barcode_path'])
 
     assert config['front_window_size'] > 0 and isinstance(config['front_window_size'], int), 'front_window_size must be an integer greater than 0.'
     assert config['rear_window_size'] > 0 and isinstance(config['rear_window_size'], int), 'rear_window_size must be an integer greater than 0.'
@@ -72,9 +89,9 @@ def execute_LevSeq():
     # Set up progres bar
     tqdm_fn = tqdm.tqdm
 
-    # Run LevSeq
-    try:
-        run_LevSeq(config, tqdm_fn)
-    except Exception as e:
-        print(e)
-    print("Run Complete, add log info")
+    # # Run LevSeq
+    # try:
+    #     run_LevSeq(config, tqdm_fn)
+    # except Exception as e:
+    #     print(e)
+    # print("Run Complete, add log info")
