@@ -384,7 +384,6 @@ def generate_platemaps(
 
         max_combo_df['amino-acid_substitutions'] = variants_updated
         
-
     # Identify unique plates
     unique_plates = max_combo_df.Plate.unique()
 
@@ -486,15 +485,17 @@ def generate_platemaps(
                 plate,
                 plate2barcode[plate],
                 well2nb(well_id),
-                f"msa_{plate}_{well_id}.fa",
+                f"msa.fa",
+                # f"msa_{plate}_{well_id}.fa",
             )
+            # print(aln_path)
 
             # plot the alignment using the nc_variant sequence
             aln = plot_sequence_alignment(
                 aln_path,
                 parent_name=plate,
-                well_seq=df[(df["Row"] == well_id[0]) & (df["Column"] == well_id[1:])][
-                    "nc_variant"
+                well_seq=df[df['Well'] == well_id][
+                    "nt_sequence"
                 ].values[0],
                 markdown_title=f"{result_folder} {plate} {plate2barcode[plate]} {well2nb(well_id)} {well_id}",
             )
