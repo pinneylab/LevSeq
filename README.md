@@ -81,6 +81,11 @@ Variant calling arguments:
 - `calling_threshold`: treat reads containing the same barcodes as WT if the percentage of reads containing a specific mutation is less than this threshold
 - `n_threads`: number of threads to use during variant calling
 
+Miscelanious agruments:
+- `skip_demultiplexing`
+- `skip_variantcalling`
+- `show_msa`: specifies whether or not to include sequence alignments of reads for each well in final output figure (may take a long time to generate this figure if you have multiple plates)
+
 #### Run locally
 ```
 levseq /path/to/config.yml
