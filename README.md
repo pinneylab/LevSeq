@@ -24,39 +24,21 @@ Once samples are prepared, the multiplexed sample is used for sequencing, and th
 
 After sequencing, you can identify variants, demultiplex, and combine with your variant function here! For simple applications, we recommend using the notebook `example/Example.ipynb`.
 
-### Installation
+### Installation on Wynton
+These steps need to be run on a Wynton dev node! The login nodes have the correct versions of `make` or `cmake` installed. 
 
-We aimed to make LevSeq as simple to use as possible, this means you should be able to run it all using pip (note you need `samtools` 
-and `minimap2` installed on your path. However, if you have issues we recommend using the Docker instance! 
-(the pip version doesn't work well with mac M3 but docker does.)
+1. Create and activate a `levseq` conda environment with `conda create --name levseq python=3.12 -y` and `conda activate levseq`.
+2. Install Samtools and Minimap2 with `conda install -c bioconda -c conda-forge samtools` and `conda install -c bioconda -c conda-forge minimap2`.
+3. Install `g++` and `gcc` compilers as well as `zlib` with `conda install -c conda-forge gcc=13 gxx=13 zlib`.
+4. Within the `executable` directory, create a `build` directory. Enter this directory and build the project using `cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ ../source/`.
+5. Run `make -j` within the `build` directory. This should create a new subdirectory, `bin`, where you will find the compiled binaries for the demultiplexing code!
 
-We recommend using terminal and a conda environment for installation:
+Now you should be able to run the entire pipeline on Wynton.
 
-```
-conda create --name levseq python=3.12 -y
-```
-
-```
-conda activate levseq
-```
-
-#### Dependencies 
-
-1. Samtools: https://www.htslib.org/download/ 
-```
-conda install -c bioconda -c conda-forge samtools
-```
-or for mac users you can use: `brew install samtools`
-
-2. Minimap2: https://github.com/lh3/minimap2
-
-```
-conda install -c bioconda -c conda-forge minimap2
-```
 
 ### Docker Installation (Recommended for full pipeline)  
-For installing the whole pipeline, you'll need to use the docker image. For this, install docker as required for your 
-operating system (https://docs.docker.com/engine/install/).
+Coming soon!
+
 
 ### Usage
 `levseq` arguments are passed using a configuration file. A template is provided in `config.yml`. 
@@ -92,37 +74,7 @@ levseq /path/to/config.yml
 ```
 
 #### Run with docker
-If using linux system
-```
-docker pull yueminglong/levseq:levseq-1.2.5-x86
-```
-If using Mac M chips (image tested on M1, M3, and M4)
-```
-docker pull yueminglong/levseq:levseq-1.2.5-arm64
-```
-
-```
-docker run --rm -v "$(pwd):/levseq_results" yueminglong/levseq:levseq-1.2.5-<architecture> <name> <location to data folder> <location of reference csv file>
-```
-Explanation:
-
---rm: Automatically removes the container after the command finishes.
-
--v "$(pwd):/levseq\_results": Mounts the current directory ($(pwd)) to /levseq\_results inside the container, ensuring the results are saved to your current directory.
-
-yueminglong/levseq:levseq-1.2.5-\<architecture\>: Specifies the Docker image to run. Replace \<architecture\> with the appropriate platform (e.g., x86).
-
-\<name\>: The name or identifier for the analysis.
-
-\<location to data folder\>: Path to the folder containing input data.
-
-\<location of reference csv file\>: Path to the reference .csv file.
-
-Important Notes:
-
-If the current directory is mounted to the container (via -v "$(pwd):/levseq\_results"), the basecalled result in FASTQ format and the ref.csv file must be located in the current directory.
-
-If these files are not present in the current directory, they will not be processed by the tool.
+Coming soon!
 
 #### Citing
 
